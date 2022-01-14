@@ -3,16 +3,20 @@ const Player = (name, type, position) => {
   const playerContainer = document.querySelector(`.player${position}`);
   const playerName = document.querySelector(`.player${position}-name`);
   const playerType = document.querySelector(`.player${position}-type`);
-  const gamePiece = type;
+  let gamePiece = type;
   const getName = () => name;
-  const getType = () => type;
+  const getType = () => gamePiece;
+
+  const setType = (type) => {
+    gamePiece = type;
+  };
 
   const setDomText = () => {
     playerName.textContent = name;
     playerType.textContent = type;
   };
 
-  return { getName, getType, setDomText };
+  return { getName, getType, setDomText, setType };
 };
 
 let player1;
@@ -21,11 +25,18 @@ let player2;
 const game = ((player1, player2) => {})(player1, player2);
 
 const displayController = (() => {
+  const winnerModal = document.querySelector(".modal-again");
+  const winnerText = document.querySelector(".form-field-again");
+  const winnerModalBtn = document.querySelector(".again");
   const modal = document.querySelector(".modal");
   const play = document.querySelector(".submit");
   const form = document.getElementById("form");
   const player1NameEl = document.querySelector("#player1");
   const player2NameEl = document.querySelector("#player2");
+  const player1Type = document.querySelector(".player1-type");
+  const player2Type = document.querySelector(".player2-type");
+  console.log(player1Type);
+  console.log(player2Type);
 
   const fillCells = () => {
     gameboard.getCells().forEach((cell) => {
@@ -57,7 +68,36 @@ const displayController = (() => {
     });
   };
 
-  return { fillCells, playListener };
+  const showPlayAgain = () => {
+    console.log(winnerModal);
+    winnerModal.style.display = "block";
+  };
+
+  const setWinnerText = (text) => {
+    winnerText.textContent = text;
+  };
+
+  const playAgainListener = () => {
+    winnerModalBtn.addEventListener("click", () => {
+      const player1TypeValue = player1.getType();
+      const player2TypeValue = player2.getType();
+      player1.setType(player2TypeValue);
+      player2.setType(player1TypeValue);
+      player1Type.textContent = player1.getType();
+      player2Type.textContent = player2.getType();
+      gameboard.setLastPlayed();
+      winnerModal.style.display = "none";
+      return;
+    });
+  };
+
+  return {
+    fillCells,
+    playListener,
+    showPlayAgain,
+    setWinnerText,
+    playAgainListener,
+  };
 })();
 
 const modalHelper = (() => {
@@ -115,11 +155,11 @@ const modalHelper = (() => {
 displayController.playListener();
 
 const gameboard = (() => {
+  let lastPlayed = "";
   let playerTurn = true;
   let players;
   let board = new Array(9).fill("", 0, 9);
   const gameboardCells = Array.from(document.querySelectorAll(".content"));
-  const winnerContainer = document.querySelector(".winner");
 
   const clearBoard = () => {
     board = new Array(9).fill("", 0, 9);
@@ -136,13 +176,27 @@ const gameboard = (() => {
     board[index] = type;
   };
 
+  const setPlayerTurn = () => {
+    playerTurn = true;
+  };
+
   const chooseCell = (event) => {
     const cell = Array.from(event.target.childNodes)[1];
     const [index] = /\d+/.exec(cell.id);
     if (board[index] === "") {
-      console.log(players);
-      console.log(playerTurn);
-      const type = players[playerTurn ? 0 : 1].getType();
+      let type;
+      if (lastPlayed === "") {
+        type = "X";
+        lastPlayed = "X";
+      } else if (lastPlayed === "X") {
+        type = "O";
+        lastPlayed = "O";
+      } else {
+        type = "X";
+        lastPlayed = "X";
+      }
+
+      //   const type = players[playerTurn ? 0 : 1].getType();
       cell.textContent = type;
       playerTurn = !playerTurn;
       board[index] = type;
@@ -152,11 +206,21 @@ const gameboard = (() => {
       }
       setWinner(winner);
       clearBoard();
+      displayController.showPlayAgain();
+      displayController.playAgainListener();
     }
   };
 
+  const setLastPlayed = () => {
+    lastPlayed = "";
+  };
+
   const setPlayers = (player1, player2) => {
-    players = [player1, player2];
+    if (player1.getType() === "X") {
+      players = [player1, player2];
+    } else {
+      players = [player2, player1];
+    }
   };
 
   const playAgain = () => {
@@ -183,7 +247,7 @@ const gameboard = (() => {
       }
     }
     if (board[0] === board[4] && board[0] === board[8]) {
-      return board[2];
+      return board[0];
     }
     if (board[2] === board[4] && board[2] === board[6]) {
       return board[2];
@@ -200,19 +264,25 @@ const gameboard = (() => {
     if (type === "") return;
     if (type === "draw") {
       winnerContainer.style.opacity = 1;
-      winnerContainer.textContent = "It's a draw!";
+      displayController.setWinnerText("It's a draw!");
     }
     if (type === player1.getType()) {
-      winnerContainer.style.opacity = 1;
-      winnerContainer.textContent = `${player1.getName()} has won!`;
+      displayController.setWinnerText(`${player1.getName()} has won!`);
     }
     if (type === player2.getType()) {
-      winnerContainer.style.opacity = 1;
-      winnerContainer.textContent = `${player2.getName()} has won!`;
+      displayController.setWinnerText(`${player2.getName()} has won!`);
     }
   };
 
-  return { getBoard, setCell, getCells, takeTurn, setPlayers };
+  return {
+    getBoard,
+    setCell,
+    getCells,
+    takeTurn,
+    setPlayers,
+    setPlayerTurn,
+    setLastPlayed,
+  };
 })();
 
 displayController.fillCells(gameboard);

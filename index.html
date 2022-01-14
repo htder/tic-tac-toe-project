@@ -11,7 +11,6 @@
   </head>
   <body>
     <header><h1>Tic Tac Toe</h1></header>
-    <div class="winner">Name has won!</div>
     <div class="center">
       <div class="grid-container">
         <div class="grid-item">
@@ -83,36 +82,14 @@
 
           <button type="submit" class="submit">Play!</button>
         </div>
+      </form>
+    </div>
 
-        <div class="modal">
-          <form id="form">
-            <div class="model-content">
-              <div class="form-field">
-                <label>Player 1 - X</label>
-                <input
-                  type="text"
-                  placeholder="Name"
-                  name="player1"
-                  class="focus"
-                  id="player1"
-                  required
-                />
-                <small></small>
-              </div>
-    
-              <div class="form-field">
-                <label>Player 2 - O</label>
-                <input
-                  type="text"
-                  placeholder="Name"
-                  name="player2"
-                  required
-                  id="player2"
-                />
-                <small></small>
-              </div>
-    
-              <button type="submit" class="again">Play Again?</button>
-            </div>
+    <div class="modal-again">
+      <div class="model-content">
+        <div class="form-field-again">Name is the Winner!</div>
+        <button type="submit" class="again">Play Again?</button>
+      </div>
+    </div>
   </body>
 </html>
