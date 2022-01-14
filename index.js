@@ -263,7 +263,6 @@ const gameboard = (() => {
   const setWinner = (type) => {
     if (type === "") return;
     if (type === "draw") {
-      winnerContainer.style.opacity = 1;
       displayController.setWinnerText("It's a draw!");
     }
     if (type === player1.getType()) {
