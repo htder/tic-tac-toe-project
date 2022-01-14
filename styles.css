@@ -1,0 +1,29 @@
+.center {
+  justify-content: center;
+  display: flex;
+}
+.grid-container {
+  border: 1px solid black;
+  display: grid;
+  row-gap: 20px;
+  column-gap: 20px;
+  grid-template-columns: repeat(3, 120px);
+  grid-template-rows: repeat(3, 120px);
+  gap: 0;
+}
+
+.grid-item {
+  border: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.content {
+  font-size: 48px;
+}
+
+header {
+  text-align: center;
+  padding: 15px 0;
+}
