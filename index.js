@@ -27,6 +27,10 @@ const gameboard = ((player1, player2) => {
   const gameboardCells = Array.from(document.querySelectorAll(".content"));
   const winnerContainer = document.querySelector(".winner");
 
+  const clearBoard = () => {
+    board = new Array(9).fill("", 0, 9);
+  };
+
   const getCells = () => {
     return gameboardCells;
   };
@@ -37,22 +41,26 @@ const gameboard = ((player1, player2) => {
     board[index] = type;
   };
 
+  const chooseCell = (event) => {
+    const cell = Array.from(event.target.childNodes)[1];
+    const [index] = /\d+/.exec(cell.id);
+    if (board[index] === "") {
+      const type = players[playerTurn ? 0 : 1].getType();
+      cell.textContent = type;
+      playerTurn = !playerTurn;
+      board[index] = type;
+      const winner = checkWinner();
+      if (winner === "") {
+        return;
+      }
+      setWinner(winner);
+    }
+  };
+
   const takeTurn = () => {
-    gameboardCells.forEach((cell) =>
-      cell.parentNode.addEventListener("click", () => {
-        const [index] = /\d+/.exec(cell.id);
-        if (board[index] === "") {
-          const type = players[playerTurn ? 0 : 1].getType();
-          cell.textContent = type;
-          playerTurn = !playerTurn;
-          board[index] = type;
-          const winner = checkWinner();
-          if (winner === "") return;
-          setWinner(winner);
-          return;
-        }
-      })
-    );
+    gameboardCells.forEach((cell) => {
+      cell.parentNode.addEventListener("click", chooseCell);
+    });
   };
 
   const checkWinner = () => {
@@ -118,4 +126,5 @@ gameboard.setCell(2, "X");
 gameboard.setCell(6, "0");
 console.log(gameboard.getBoard());
 displayController.fillCells(gameboard);
+gameboard.takeTurn();
 gameboard.takeTurn();
