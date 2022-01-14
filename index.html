@@ -44,14 +44,75 @@
       </div>
       <div class="players">
         <div class="player1">
-          <p class="player1-name">Player 1</p>
-          <p class="player1-type">0</p>
+          <p class="player1-name"></p>
+          <p class="player1-type"></p>
         </div>
         <div class="player2">
-          <p class="player2-name">Player 2</p>
-          <p class="player2-type">X</p>
+          <p class="player2-name"></p>
+          <p class="player2-type"></p>
         </div>
       </div>
     </div>
+    <div class="modal">
+      <form id="form">
+        <div class="model-content">
+          <div class="form-field">
+            <label>Player 1 - X</label>
+            <input
+              type="text"
+              placeholder="Name"
+              name="player1"
+              class="focus"
+              id="player1"
+              required
+            />
+            <small></small>
+          </div>
+
+          <div class="form-field">
+            <label>Player 2 - O</label>
+            <input
+              type="text"
+              placeholder="Name"
+              name="player2"
+              required
+              id="player2"
+            />
+            <small></small>
+          </div>
+
+          <button type="submit" class="submit">Play!</button>
+        </div>
+
+        <div class="modal">
+          <form id="form">
+            <div class="model-content">
+              <div class="form-field">
+                <label>Player 1 - X</label>
+                <input
+                  type="text"
+                  placeholder="Name"
+                  name="player1"
+                  class="focus"
+                  id="player1"
+                  required
+                />
+                <small></small>
+              </div>
+    
+              <div class="form-field">
+                <label>Player 2 - O</label>
+                <input
+                  type="text"
+                  placeholder="Name"
+                  name="player2"
+                  required
+                  id="player2"
+                />
+                <small></small>
+              </div>
+    
+              <button type="submit" class="again">Play Again?</button>
+            </div>
   </body>
 </html>
