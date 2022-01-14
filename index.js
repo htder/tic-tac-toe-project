@@ -1,20 +1,31 @@
 "use strict";
-const Player = (name, type) => {
+const Player = (name, type, position) => {
+  const playerContainer = document.querySelector(`.player${position}`);
+  const playerName = document.querySelector(`.player${position}-name`);
+  const playerType = document.querySelector(`.player${position}-type`);
   const gamePiece = type;
   const getName = () => name;
   const getType = () => type;
 
-  return { getName, getType };
+  const setDomText = () => {
+    playerName.textContent = name;
+    playerType.textContent = type;
+  };
+
+  return { getName, getType, setDomText };
 };
 
-const player1 = Player("player1", "0");
-const player2 = Player("player2", "X");
+const player1 = Player("Player 1", "X", 1);
+player1.setDomText();
+const player2 = Player("Player 2", "0", 2);
+player2.setDomText();
 
 const gameboard = ((player1, player2) => {
   let playerTurn = true;
   const players = [player1, player2];
   const board = new Array(9).fill("", 0, 9);
   const gameboardCells = Array.from(document.querySelectorAll(".content"));
+  const winnerContainer = document.querySelector(".winner");
 
   const getCells = () => {
     return gameboardCells;
@@ -29,7 +40,6 @@ const gameboard = ((player1, player2) => {
   const takeTurn = () => {
     gameboardCells.forEach((cell) =>
       cell.parentNode.addEventListener("click", () => {
-        console.log(cell);
         const [index] = /\d+/.exec(cell.id);
         if (board[index] === "") {
           const type = players[playerTurn ? 0 : 1].getType();
@@ -37,7 +47,9 @@ const gameboard = ((player1, player2) => {
           playerTurn = !playerTurn;
           board[index] = type;
           const winner = checkWinner();
-          console.log(`${winner} has won`);
+          if (winner === "") return;
+          setWinner(winner);
+          return;
         }
       })
     );
@@ -65,6 +77,22 @@ const gameboard = ((player1, player2) => {
       return "";
     } else {
       return "draw";
+    }
+  };
+
+  const setWinner = (type) => {
+    if (type === "") return;
+    if (type === "draw") {
+      winnerContainer.style.opacity = 1;
+      winnerContainer.textContent = "It's a draw!";
+    }
+    if (type === player1.getType()) {
+      winnerContainer.style.opacity = 1;
+      winnerContainer.textContent = `${player1.getName()} has won!`;
+    }
+    if (type === player2.getType()) {
+      winnerContainer.style.opacity = 1;
+      winnerContainer.textContent = `${player2.getName()} has won!`;
     }
   };
 
